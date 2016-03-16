@@ -1,0 +1,1 @@
+<%= link_to 'Quotations Problem (Questions : 1-6)', :controller => "basics", :action => "quotations" %>

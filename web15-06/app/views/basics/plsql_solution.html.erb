@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+<p>
+<b>Question 7</b><br/><br/>
+    <i>Use a standard text editor to create a plain text file containing five lines, each line to contain your favorite stock symbol, an integer number of shares owned, and a date acquired (in the form MM/DD/YYYY). Separate the fields on each line with tabs. Create a database table to hold these data
+    create table my_stocks (
+    symbol varchar(20) not null,
+    n_shares integer not null,
+    date_acquired date not null
+    );
+
+    and figure out how to load the data from your text file into the database and do it.</i>
+    <br/><br/>
+    <b>Solution : <br/></b>
+    CREATE TABLE my_stocks(
+symbol varchar(20) not null,
+n_shares integer not null,
+date_acquired date not null
+);
+   <br/> <br/>
+Now, following is the command to load the data from text file to database in postgresql....
+<br/><br/>
+copy my_stocks FROM '/home/dharma/RubymineProjects/ps2/data.txt' DELIMITER E'\t';
+<br/><br/>
+and the data.txt file is attached here....
+now when we run the follwoing:
+    <br/><br/> select * from my_stocks; in postgres it shows 5 rows entered....
+
+<br/><br/>
+
+
+    <b>Question 8</b><br/><br/>
+    <i>Copying Data from One Table to Another: SQL is a very powerful language and there is no need to bring in any other tools if what you want to do is move data around within the RDBMS. Using only one SQL statement, create a table called stock prices with three columns: symbol, quote date, and price. Within this one statement, fill the table you’re creating with one row per symbol in my stocks. The date and price columns should be filled with the current date and a nominal price. Hint: select symbol, sysdate as quote date, 31.415 as price from my stocks;. Create a new table:</i>
+    <br/><br/><b>Solution : </b><br/>The following command creates the new table called stock_prices with values symbols from my_stocks and other two fields.
+<br/><br/>
+>> create table stock_prices as select symbol,CURRENT_DATE as quote_date,31.415 as price from my_stocks;
+
+and <br/><br/>
+    select * from stock_prices shows the new values inserted into new table .
+<br/><br/>
+now create a new table using :
+    <br/><br/>
+create table newly_acquired_stocks (
+symbol
+varchar(20) not null,
+n_shares
+integer not null,
+date_acquired
+date not null
+);
+    <br/><br/>
+now insert data into the newly_acquired_stocks from the my_stocks using following command:
+    <br/>
+ps2_development=# insert into newly_acquired_stocks (symbol,n_shares,date_acquired) select symbol,n_shares,date_acquired from my_stocks where n_shares > 5;
+    <br/><br/>
+now we can view the newly_acquired_stocks. and it shows 3 rows whose stock values are 7,10 and 20.
+
+<br/><br/>
+
+    <b>Question 9</b><br/><br/><b>JOIN: With a single SQL statement JOINing my stocks and stock prices, produce a report showing symbol, number of shares, price per share, and current value.</b>
+    <br/><br/><b>Solution : </b><br/>we used copy command to produce the result of join statement and save it to the output.txt file . the command was:\
+    <br/><br/>
+ps2_development=# copy (select m.symbol,m.n_shares,m.n_shares/n.price,m.n_shares*n.price from my_stocks as m,stock_prices as n where m.symbol=n.symbol) TO '/home/dharma/RubymineProjects/ps2/output.txt' WITH CSV;
+    <br/><br/>
+and output.txt file shows:
+    <br/><br/>
+paper,20,0.63663854846410950183,628.300
+bike,10,0.31831927423205475092,314.150
+car,5,0.15915963711602737546,157.075
+mobile,2,0.06366385484641095018,62.830
+laptop,7,0.22282349196243832564,219.905
+
+<br/><br/>
+
+    <b>Question 10</b><br/><br/><b>OUTER JOIN: Insert a row into my stocks. Rerun your query from the previous exercise. Notice that your new stock does not appear in the report. This is because you’ve JOINed them with the constraint that the symbol appear in both tables. Modify your statement to use an OUTER JOIN instead so that you’ll get a complete report of all your stocks, but won’t get price information if none is available.</b><br/><br/>
+<b>Solution : </b><br/>First insert a row to my_stocks using folloowing command;
+ps2_development=# insert into my_stocks(symbol,n_shares,date_acquired) VALUES ('pen',10,'03/04/2015');
+
+now execute the command on no.9 and the result is still the same.
+
+now lets execute the following command for getting result of columns on my_stocks where there is nothing in stock_prices using :
+
+ps2_development=# copy (select m.symbol,m.n_shares,m.n_shares/n.price,m.n_shares*n.price from my_stocks as m left outer join stock_prices as n on m.symbol=n.symbol) TO '/home/dharma/RubymineProjects/ps2/output.txt' WITH CSV;
+
+and output.txt shows following output:
+
+paper,20,0.63663854846410950183,628.300
+bike,10,0.31831927423205475092,314.150
+car,5,0.15915963711602737546,157.075
+mobile,2,0.06366385484641095018,62.830
+laptop,7,0.22282349196243832564,219.905
+pen,10,,
+
+<br/><br/>
+
+    <b>Question 11</b><br/><br/><b>
+    PL/SQL: Inspired by Wall Street’s methods for valuing Internet companies, we’ve developed our own valuation method for this problem set: a stock is valued at the sum of the ASCII characters making up its symbol. (Note that students who’ve used lowercase letters to represent symbols will have higher- valued portfolios than those who’ve used all-uppercase symbols; “IBM” is worth only $216, whereas “ibm” is worth $312!) Define a PL/SQL function that takes a trading symbol as its argument and returns the stock value. With a single UPDATE statement, update stock prices to set each stock’s value to whatever is returned by this PL/SQL procedure. Define a PL/SQL function that takes no arguments and returns the aggregate value of the portfolio (n shares * price for each stock). You’ll want to define your JOIN from DB Exercise 3 (above) as a cursor and then use the PL/SQL Cursor FOR LOOP facility. Hint: when you’re all done, you can run this procedure from the psql client with select portfolio value() from dual;.</b><br/><br/>
+    <b>Solution : </b><br/>
+
+    Now we created the file called return_stock_value.txt and put the following codes:
+<br/>
+CREATE OR REPLACE FUNCTION return_stock_value(symbol varchar)<br/>
+returns integer AS $$<br/>
+DECLARE character char;<br/>
+ascii_value int;<br/>
+begin<br/>
+ascii_value = 0;<br/>
+for i IN 1..length(symbol)<br/>
+loop<br/>
+character = substring(symbol FROM i FOR 1);<br/>
+ascii_value = ascii_value + ascii(character);<br/>
+end loop;<br/>
+return ascii_value;<br/>
+end;<br/>
+$$ language plpgsql;<br/>
+<br/>
+and from command line we did:<br/><br/>
+ps2_development=# \i 'home/dharma/RubymineProjects/ps2/return_stock_value.txt';
+<br/><br/>
+then it gave create function.
+    <br/><br/>
+now we run:
+    <br/><br/>
+select return_stock_value('paper'); and it works just fine.
+    <br/><br/>
+Now we wanted to update the third column of table stock_prices called price with these values.
+so we run the following command:
+    <br/><br/>
+ps2_development=# UPDATE stock_prices<br/>
+ps2_development-# SET price = return_stock_value(symbol)<br/>
+ps2_development-# WHERE symbol IN (SELECT symbol FROM stock_prices);<br/>
+    <br/>
+and it shows update 5 and we can look the values using select * from stock_prices;
+    <br/>
+now we made a function called return_portfolio() and save it as return_portfolio.txt which is as:
+    <br/><br/>
+CREATE OR REPLACE FUNCTION return_portfolio()<br/>
+returns TABLE(symbol varchar(20), acquired date, price_per_share decimal,current_value decimal) AS $$<br/>
+BEGIN<br/>
+RETURN query<br/>
+SELECT m.symbol,<br/>
+m.date_acquired,<br/>
+s.price,<br/>
+(s.price * m.n_shares) AS current_value<br/>
+FROM   my_stocks  AS m,stock_prices AS s<br/>
+WHERE  m.symbol = s.symbol;<br/>
+END<br/>
+$$ language plpgsql;<br/>
+    <br/><br/>
+and executed the followoing command from the command line:
+
+ps2_development=# \i 'home/dharma/RubymineProjects/ps2/return_portfolio.txt';
+and tested using :
+select return_portfolio();
+
+<br/><br/>
+
+    <b>Question 12</b><br/><br/><b>Buy More of the Winners: Rather than taking your profits on the winners, buy more of them! Use SELECT AVG() to figure out the average price of your holdings. Using a single INSERT with SELECT statement, double your holdings in all the stocks whose price is higher than average (with date acquired set to current date). Rerun your query from Exercise 10. Note that in some cases you will have two rows for the same symbol. If what you’re really interested in is your current position, you want a report with at most one row per symbol. Use a select ... group by ... query from my stocks to produce a report of symbols and total shares held. Use a select ... group by ... query JOINing with stock prices to produce a report of symbols and total value held per symbol. Use a select ... group by ... having ... query to produce a report of symbols, total shares held, and total value held per symbol restricted to symbols in which you have at least two blocks of shares (i.e., the “winners”).
+    <br/><br/><b>Solution : </b></b>
+    <br/>The following command was executed to find the average of the price column in table stock_prices:
+<br/><br/>
+select avg(price) from stock_prices;<br/><br/>
+and run the following command:<br/><br/>
+ps2_development=# insert into my_stocks(symbol,n_shares,date_acquired)<br/>
+select m.symbol,2*m.n_shares as n_shares,CURRENT_DATE as date_acquired<br/>
+from stock_prices s,my_stocks m<br/>
+where s.symbol=m.symbol and s.price > (select avg(price) from stock_prices);<br/>
+    <br/><br/>
+and looked at output using:
+    <br/><br/>
+select * from my_stocks;<br/>
+    <br/>
+and this image(1.png) provides the ouptput...<br/><br/>
+
+following command was executed to find the total shares for the duplicate items and grouping by sumbol:<br/>
+    <br/>
+ps2_development=# select symbol, sum(n_shares) as total_share<br/>
+ps2_development-# from my_stocks<br/>
+ps2_development-# group by symbol;<br/>
+    <br/><br/>
+and following command for calculating the value of certain symbol:<br/>
+
+ps2_development=# select m.symbol,sum(m.n_shares * n.price) as value<br/>
+ps2_development-# from my_stocks<br/>
+ps2_development-# m<br/>
+ps2_development-# inner join stock_prices n on n.symbol=m.symbol<br/>
+ps2_development-# group by m.symbol;<br/>
+    <br/>
+and following command for restricting to the groups having two blocks of share...<br/>
+    <br/>
+ps2_development=# select m.symbol,sum(m.n_shares * n.price) as value<br/>
+from my_stocks<br/>
+m<br/>
+inner join stock_prices n on n.symbol=m.symbol<br/>
+group by m.symbol<br/>
+ps2_development-# having count(m.symbol) >= 2;<br/>
+    <br/><br/>
+and the image (2.png) shows the output of last 3 commands:<br/><br/>
+
+<br/><br/>
+
+    <b>Question 13</b><br/><br/>
+<b>Solution : </b><br/>Following command eas executed to create the view stock_i_like<br/><br/>
+ps2_development=# create view stock_i_like as select m.symbol,sum(m.n_shares * n.price) as value<br/>
+from my_stocks m<br/>
+inner join stock_prices n on n.symbol=m.symbol<br/>
+group by m.symbol<br/>
+having count(m.symbol) >= 2;<br/>
+    <br/><br/>
+and select symbol,value from stock_i_like; was executed to find the result.<br/><br/>
+this image(3.png) shows the ouptut
+    <br/><br/>
+
+</p>
+</body>
+</html>
+

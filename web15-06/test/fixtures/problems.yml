@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  problemid: 1
+  name: "new_problem"
+  assignment_id: 1
+
+two:
+  problemid: 1
+  name: MyString
+  assignment_id: 

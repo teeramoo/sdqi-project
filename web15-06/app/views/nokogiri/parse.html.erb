@@ -1,0 +1,13 @@
+<html>
+	<head>
+		<title> parsed page </title>
+	</head>
+	<body>
+		<p>
+		<% @TitleList.each do |element|
+		%>
+		<li><%= element.to_s.html_safe %></li>
+		<% end %>
+		</p>
+	</body>
+</html>

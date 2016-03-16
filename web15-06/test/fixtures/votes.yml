@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  id: 1
+  upvote: true
+  downvote: false
+  user_id: 1
+  item_id: 1
+
+two:
+  id: 2
+  upvote: false
+  downvote: true
+  user_id: 
+  item_id: 

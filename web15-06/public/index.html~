@@ -1,0 +1,11 @@
+<html>
+	<head><title>Welcome</title></head>
+	<body>
+
+	"Hello to the home page of Group 6!"
+	<br/>
+	<a href="/assignments/views">click here</a>
+	<br/>
+	</body>
+</html>
+

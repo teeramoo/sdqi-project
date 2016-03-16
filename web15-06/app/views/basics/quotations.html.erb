@@ -1,0 +1,98 @@
+<html>
+<head>
+  <title>quotation</title>
+  <body>
+    <h3>Quotations</h3>
+
+    <%= form_tag basics_search_function_path, method: 'get' do %>
+       <%=text_field_tag :search, params[:search], id: 'search_id' %>
+       <%=submit_tag "search", id:'search_button', :name => nil %>
+       <% end %>
+
+
+    <ul>
+      <% @quotations.each do |quotation| %>
+      <li><%= h quotation.author_name %> : <%= h quotation.quote %></li>
+
+          <td><%= button_to "kill", {:action => "kill_values", :id => quotation.id, method: 'post'} %></td>
+
+      <% end %>
+    </ul>
+
+  <br />
+
+  <% if params[:sort_by] == "date" %>
+
+      <%= link_to "sort by category", :action => :quotations, :sort_by => :category %>
+      <% else %>
+      <%= link_to "sort_by_date", :action => :quotations, :sort_by => :date %>
+      <% end %>
+
+      <%= form_tag basics_categories_path, method: 'get' do %>
+      <% @category = Quotation.uniq.pluck(:category) %>
+      <%= select_tag "category_name", options_for_select(@category.map{|category| category},
+                                                         selected: params["category_name"]),:prompt => "select category",
+                     id: 'select_id' %>
+      <%= submit_tag "submit" %>
+
+      <% end %>
+
+      <% if !cookies[:values].nil? %>
+      <td><%= button_to "clear cookies", {:action => "clear_cookies", method: 'post'} %></td>
+        <% end %>
+
+        <td><%= button_to "export_xml", {:action => "export_xml", method: 'post'} %></td>
+        <td><%= button_to "export_json", {:action => "export_json", method: 'post'} %></td>
+
+
+        <h5>import from another server</h5>
+        <%= form_tag url_for(:controller => 'basics', :action => 'import_server'), :method => 'get' do %>
+            <fieldset>
+              <legend>
+                Enter url.xml
+              </legend>
+              <div class="form_row">
+                <%= text_field_tag :url %>
+              </div>
+              <p><%= submit_tag 'submit' %></p>
+            </fieldset>
+         <% end %>
+
+    <hr />
+
+
+      <h3> New Quotation</h3>
+
+  <%= form_for @quotation, :url => {:action => "create" } do |form| %>
+
+      <fieldset>
+        <legend>Enter Details</legend>
+
+        <div class="form_row">
+          <%= form.label :author_name %>
+          <%= form.text_field :author_name, :size => 20, :maxlength => 40 %>
+        </div>
+
+        <div class="form_row">
+          <%= form.label :category %>
+          <%= form.text_field :category, :size => 20, :maxlength => 40 %>
+        </div>
+
+
+        <div class="form_row">
+          <%= form.label :quote %>
+          <%= form.text_area :quote, :rows => 2, :cols => 40, :maxlength => 500 %>
+        </div>
+
+      </fieldset>
+      <p>
+        <div class="form_row">
+          <%= form.submit 'create' %>
+        </div>
+      </p>
+
+      <% end %>
+
+  </body>
+</head>
+</html>

@@ -1,0 +1,11 @@
+<html>
+	<head><title>Welcome</title></head>
+	<body>
+	
+	"Hello to the home page of Group 6!"
+	<br/>
+	<%= link_to("Click here", {:action => 'index'})%>
+	<br/>
+	</body>
+</html>
+

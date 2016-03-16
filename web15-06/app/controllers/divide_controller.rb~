@@ -1,0 +1,12 @@
+class DivideController < ApplicationController
+	def index
+	end
+
+	def result
+		begin
+		@result = 1/0
+		rescue DivideByZeroException => e
+		@result = e.backtrace
+		end
+	end
+end

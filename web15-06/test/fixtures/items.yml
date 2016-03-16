@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  id: 1
+  name: "samosa"
+  price: 10
+  description: "delicious samosa food"
+  category_id: 2
+
+two:
+  id: 2
+  name: "fried rice"
+  price: 20
+  description: "delicious fried rice"
+  category_id: 1

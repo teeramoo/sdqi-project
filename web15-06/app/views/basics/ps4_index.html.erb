@@ -1,0 +1,165 @@
+<p><b>1. All social Web applications have users, content, and some kind of user-to-content map. Specify what kind of information each of these areas will have in your application. </b> </p>
+
+<p><i><b>Answer:</b></i></p>
+
+Potential content available from the site are:</br>
+<ol>
+  <li>List of Cafes in AIT. </li>
+
+  <li>Price Items and availability of food items posted on the web page by vendors.</li>
+
+  <li>Users able to rate the food items on a five star scale. Users can also provide comments for other users or feedbacks to vendors.</li>
+
+  <li>Vendors can post special food items or other offers along with its validity</li>
+
+  <li>Each user will have a role. Roles can be either admin, member or a vendor. An admin member may view the entire content of the application. Also, the admin will have the privilege to be able to temporarily deactivate user accounts on account of his/her misbehavior.</li>
+</ol>
+<p>A user with member role will be able to view the items that are posted by the vendors along with the details of the items. They can also give their comments or ratings for each of the items. This user may post suggestions or feedbacks to the vendor. Any form of abuse faced during in the application may be directly reported to the admin as well.</p>
+
+<p>A user with 'vendor' role has similar role as that of the 'member' role with an additional role of posting the items and updating their prices as well. The vendor can also update the availability status of the different items along with their prices. The vendor users can view the feedbacks that are sent from the users to them. These comments will not be viewable by any other 'member' users. </p>
+
+<b>Technology Used</b>
+
+<p>-The site will be hosted on the Apache web server with Ruby on Rails as the web framework and PostgreSQL as the backend.</p>
+
+<p><ul>The basic information processing requirements:</p>
+
+<li>User database, storing names, email addresses of the users</li>
+
+<li>Content database, storing the comments and ratings provided by the users along with timestamps.</li>
+
+<li>Active Admin used to manage admin accounts.</li></ul>
+
+<p><br />
+</p>
+
+<p><b>2. Learn how to avoid SQL injection and XSS attacks in your development framework and document and follow your plan for the rest of the project.</b></p>
+
+<p><i><b>Answer</b></i></p>
+
+We have planned to add following methods for the prevention of SQL Injection:
+<ol>
+  <li>Create different users to acces the data from database that has does not have a super user privilege to drop the entire database or entire table. </li>
+
+  <li>Filter all data and escape the '(single quote) so that all commands after it will be taken as the string and will not be executed as sql command. </li>
+
+  <li>Always use parameterized prepared statements. </li>
+
+  <li>Validate the user input forms such as validation for length, validation for length of data input and look if its according to certain format using Regular Expression. </li>
+</ol>
+<p>For most of the time the ORM(Object Realational Mapping) handles the protection for us against sql injection in rails.But we have to be careful varying cases such as below: </p>
+
+<p>Lets say we have to search using certain column from our database and we write a code such as: </p>
+
+<p><i>def search <br/>
+  query = params[:query]
+  @users = User.find(:all, :conditions =&gt; "name LIKE '%#{query}%'") <br/>
+  end</i></p>
+
+Then this is vulnerable to the sql injection as the user input is directly embedded to the sql statement.
+<br/>The solution to this is to use parameterized prepared statements so that our sql query remains fixed and the user input is only assigned to the variable as a string like below:
+<br/><br/>
+<i>def search </br>
+  query = params[:search] </br>
+  @users = User.find(:all, :conditions =&gt; ['name LIKE ?', '%', + query + '%']) </br>
+  end</i> </br>
+
+And we plan to add following methods for the prevention of XSS Attack:
+
+<ol><li>We plan to use &amp;lt; and &amp;gt; instead of &lt; and &gt; in our output so that it will prevent browser from interpreting. We also plan to use html escape and sanitizer for escaping and sanitizing the user data. </li>
+
+  <li>2.Validate the user input forms such as validation for length, validation for length of data input and look if its according to certain format using Regular Expression. </li></ol>
+
+
+<p><b>3. Audit your software for any sensitive data like database passwords make sure they are secure. Document the result of your audit and plan.</b></p>
+
+
+<p><i><b>Answer:</b></i></p>
+
+
+<p>We have listed secrets.yml as one of the files in the .gitignore list [adding the line '/config/secrets.yml' in the .gitignore file]. This prevents the secrets.yml file from being present in the source control in order to prevent any unauthorized access to test, development and production secret keys. Since, we are deploying using Capistrano, we keep the secrets.yml file into the shared folder which is in the deploy folder and linked that in the 'deploy.rb' file as 'set :linked_files, ["config/secrets.yml"]'</p>
+
+
+<p>Currently, we are checking in the 'database.yml' file into the source control since the databse credentials are only getting referenced through the environment variables. However, after reading through the developer's best practices guide, we are placing the 'database.yml' in .gitignore and symlinking it via deploy.rb and let capistrano take care of linking it during deployment. </p>
+
+
+<p><b>4. Define your user data model</b></p>
+
+<b>Answer : </b><br/>
+<p>Our User model is created using Devise. Apart from the default devise columns in the Users model, we have added additional columns as well : </p>
+<br/>
+<table>
+  <tr>
+    <th>Column</th>
+    <th>Type</th>
+  </tr>
+  <tr>
+    <td>email</td>
+    <td>character varying</td>
+  </tr>
+  <tr>
+    <td>encrypted_password</td>
+    <td>character varying</td>
+  </tr>
+  <tr>
+    <td>reset_password_token</td>
+    <td>character varying</td>
+  </tr>
+  <tr>
+    <td>reset_password_sent_at</td>
+    <td>timestamp without timezone</td>
+  </tr>
+  <tr>
+    <td>remember_created_at</td>
+    <td>timestamp without timezone</td>
+  </tr>
+  <tr>
+    <td>sign_in_count</td>
+    <td>integer</td>
+  </tr>
+  <tr>
+    <td>current_sign_in_at</td>
+    <td>timestamp without timezone</td>
+  </tr>
+  <tr>
+    <td>last_sign_in_at</td>
+    <td>timestamp without timezone</td>
+  </tr>
+  <tr>
+    <td>current_sign_in_ip</td>
+    <td>inet</td>
+  </tr>
+  <tr>
+    <td>last_sign_in_ip</td>
+    <td>inet</td>
+  </tr>
+  <tr>
+    <td>created_at</td>
+    <td>timestamp without timezone</td>
+  </tr>
+  <tr>
+    <td>updated_at</td>
+    <td>timestamp without timezone</td>
+  </tr>
+  <tr>
+    <td>role_id</td>
+    <td>integer</td>
+  </tr>
+  <tr>
+    <td>username </td>
+    <td>character varying</td>
+  </tr>
+  <tr>
+    <td>banned </td>
+    <td>boolean</td>
+  </tr>
+</table>
+
+
+<p><b>5.  Sketch your user registration and management page flow. See the example on the course home page for an idea.</b></p>
+<%=  %>
+<br />
+<%= link_to 'Registration and Management Page Flow', :controller => "basics", :action => "UML_general" %><br/>
+<%= link_to 'Admin Users UML', :controller => "basics", :action => "UML_admin" %>
+
+  </div>

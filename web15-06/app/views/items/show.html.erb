@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Indian Food stall</title>
+
+  <!-- Google fonts -->
+  <link href='http://fonts.googleapis.com/css?family=Roboto:400,300,700' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Josefin+Sans:600' rel='stylesheet' type='text/css'>
+
+  <!-- font awesome -->
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <!-- bootstrap -->
+  <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css" />
+
+  <!-- animate.css -->
+  <link rel="stylesheet" href="/assets/animate/animate.css" />
+  <link rel="stylesheet" href="/assets/animate/set.css" />
+
+  <!-- gallery -->
+  <link rel="stylesheet" href="/assets/gallery/blueimp-gallery.min.css">
+
+  <!-- favicon -->
+  <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+
+
+  <link rel="stylesheet" href="/assets/style.css">
+
+</head>
+
+<body>
+<div class="topbar animated fadeInLeftBig"></div>
+
+<div id="home">
+  <!-- Slider Starts -->
+  <div class="banner">
+    <% if @item.name == "Samosa" %>
+    <img src="/images/portfolio/samosa_final.jpg" alt="banner" class="img-responsive">
+    <% end %>
+
+    <% if @item.name == "Biryani" %>
+        <img src="/images/portfolio/biryani_final.jpg" alt="banner" class="img-responsive">
+    <% end %>
+
+    <% if @item.name == "Pakoda" %>
+        <img src="/images/portfolio/pakoda_final.jpg" alt="banner" class="img-responsive">
+    <% end %>
+
+    <% if @item.name == "Special" %>
+        <img src="/images/portfolio/special_final.jpg" alt="banner" class="img-responsive">
+    <% end %>
+
+    <% if @item.name == "Tikka" %>
+        <img src="/images/portfolio/tikka_final.jpg" alt="banner" class="img-responsive">
+    <% end %>
+
+    <% if @item.name == "Dosa" %>
+        <img src="/images/portfolio/dosa_final.jpg" alt="banner" class="img-responsive">
+    <% end %>
+
+    <div class="caption">
+      <div class="caption-wrapper">
+        <div class="caption-info">
+          <i class="fa fa-coffee fa-5x animated bounceInDown"></i>
+          <h1 class="animated bounceInUp">Delicious <%= @item.name %></h1>
+          <p class="animated bounceInLeft">At <%= @item.price %> Bhatt only</p>
+          <a href="#menu" class="explore animated bounceInDown"><i class="fa fa-angle-down  fa-3x"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- #Slider Ends -->
+</div>
+
+<!-- Cirlce Starts -->
+<div id="menu"  class="container spacer about">
+  <h2 class="text-center wowload fadeInUp">Remember us for tasty <%= @item.name %></h2>
+  <div class="row">
+    <div class="col-sm-6 wowload fadeInLeft">
+      <h4><i class="fa fa-camera-retro"></i> Description</h4>
+      <p><%= @item.description %></p>
+      <p>
+        <strong>Comments:</strong>
+        <% @item.comments.each do |comment| %>
+          <p></p><%= comment.comment_text %></p>
+      <% end %>
+      <%= form_for(@comment) do |f| %>
+
+          <div class="field">
+            <%= f.label :comment_text %><br>
+            <%= f.text_area :comment_text %>
+          </div>
+          <%= f.hidden_field :user_id, :value => current_user.id %>
+          <%= f.hidden_field :item_id, :value => @item.id %>
+          <div class="actions">
+            <%= f.submit %>
+          </div>
+      <% end %>
+      </p>
+    </div>
+
+
+    <div class="col-sm-6 wowload fadeInRight">
+
+      <h4><i class="fa fa-bars"></i> Samosa</h4>
+
+      <!-- menus -->
+
+      <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+            <div class="panel panel-default">
+              <div class="panel-heading" role="tab">
+                    <% @user_vote = Vote.where(user_id: current_user.id) %>
+                    <% @item_vote = Vote.where(item_id: @item.id) %>
+                    <% if !@item.votes.where(:user_id => current_user.id).present? %>
+                    <%= button_to "Upvote",{:id => @item.id, :action => "upvote", method: "post"},{class: "btn btn-success"} %>
+                    <% end %>
+                  <p>
+                    <strong>Total Upvotes:</strong>
+                    <%= @item.upvoted_users.count %>
+                  </p>
+                </h4>
+              </div>
+              </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+</div>
+<!-- About Ends -->
+
+
+<% if user_signed_in? %>
+    <div id="contact" class="spacer">
+      <!--Contact Starts-->
+      <div class="container contactform center">
+        <h2 class="text-center  wowload fadeInUp">Online Order</h2>
+        <div class="row wowload fadeInLeftBig">
+          <div class="col-sm-6 col-sm-offset-3 col-xs-12">
+            <%= form_tag(menu_makereservations_path, method: "get")  %>
+            <%= text_field_tag :name, nil, :placeholder=> 'Quantity' %>
+            <%= text_area_tag :body, nil, :placeholder=>'Message' %>
+            <script>
+                params[name] = document.getElementById("name").value;
+            </script>
+            <%= submit_tag :Send , class: "btn btn-primary" %>
+          </div>
+        </div>
+<% end %>
+
+
+</div>
+
+</div>
+
+<!-- jquery -->
+<script src="/assets/jquery.js"></script>
+
+<!-- wow script -->
+<script src="/assets/wow/wow.min.js"></script>
+
+
+<!-- boostrap -->
+<script src="/assets/bootstrap/js/bootstrap.js" type="text/javascript" ></script>
+
+<!-- jquery mobile -->
+<script src="/assets/mobile/touchSwipe.min.js"></script>
+<script src="/assets/respond/respond.js"></script>
+
+<!-- gallery -->
+<script src="/assets/gallery/jquery.blueimp-gallery.min.js"></script>
+
+<script src='https://maps.googleapis.com/maps/api/js?key=&sensor=false&extension=.js'></script>
+
+
+<!-- custom script -->
+<script src="/assets/script.js"></script>
+
+
+</body>
+</html>

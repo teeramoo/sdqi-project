@@ -1,0 +1,69 @@
+
+<% if current_user.admin? %>
+<table class="table">
+  <thead>
+  <tr>
+    <th>Email</th>
+    <th>Role</th>
+    <th>Ban</th>
+    <th>Sign in count</th>
+    <th>Last Signed in at</th>
+    <th colspan="3"></th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @users.each do |user| %>
+  <% if !user.banned? %>
+
+      <tr>
+        <td><%= user.email %></td>
+        <td><%= user.role.name %></td>
+        <td><%= button_to "Ban",{ :action => "ban", :id => user.id, method: "post" }, id: "ban_button" %></button></td>
+        <td><%= user.sign_in_count %></td>
+        <td><%= user.last_sign_in_at %></td>
+        <td><%= link_to 'Show', user, :class=>"btn-sm btn-success" %></td>
+        <td><%= link_to 'Edit', edit_user_path(user), :class=>"btn-sm btn-warning" %></td>
+        <td><%= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' } , :class=>"btn-sm btn-danger" %></td>
+      </tr>
+  <%end%>
+  <%end%>
+  </tbody>
+</table>
+<br />
+    <br />
+    <br />
+<p>Logged in Users</p>
+<% @users.each do |user| %>
+
+  <% if user.online? %>
+    <li><b>Email:</b>&nbsp; &nbsp;<%= user.email %></li>
+  <% end %>
+
+<%end%>
+    <br>
+    <br>
+    <%= link_to "Add User", new_user_path, :class => "btn btn-primary" %>
+
+<% end %>
+<% if (current_user.member? || current_user.vendor?) %>
+
+    <table class="table">
+      <thead>
+      <tr>
+        <th>Email</th>
+        <th>Role</th>
+        <th colspan="3"></th>
+      </tr>
+      </thead>
+      <tbody>
+
+              <tr>
+                <td><%= current_user.email %></td>
+                <td><%= current_user.role.name %></td>
+                <td><%= link_to 'Show', current_user %></td>
+                <td><%= link_to 'Edit', edit_user_path(current_user) %></td>
+                <td><%= link_to 'Destroy', current_user, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+              </tr>
+      </tbody>
+    </table>
+<% end %>

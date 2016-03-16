@@ -1,0 +1,18 @@
+<html>
+<head>
+  <title>
+    Quotes according to categories
+  </title>
+</head>
+<body>
+
+<ul>
+  <% @quotations.each do |quotation| %>
+      <li><%= h quotation.author_name %> : <%= h quotation.quote %></li>
+  <% end %>
+  <%= link_to "back to main page", :action => :quotations %>
+</ul>
+
+</body>
+
+</html>

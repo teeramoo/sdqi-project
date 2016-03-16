@@ -1,0 +1,143 @@
+<h1>Project Plan</h1>
+
+<p align="justify">We are initiating to create a web application for one of the food counters in the SU Snacks Bar [Rajan Cafe] in Asian Institute of Technology. The application will contain the everyday menu of the food items and also include a section where users can post comments/feedbacks regarding the meals. The application will also allow the special menu to be posted by the vendor. The target users for this application would be everyone who visits the food counter and also the vendors. </p>
+
+<i><b>(1.a) What will people be able to learn about in the community that you’re building? Alternatively,
+
+if you are automating some collaborative workflow, what work will people accomplish with
+
+your sytem?</b></i>
+<br/>
+
+	<p align="justify">The prospective users will consist of the entire AIT community. The application will act as an informative portal for the food items that are served in the food counter including price for each food item and its availability. Also, daily special menu would be present to let the people know of the special cuisines made available on that day.</p>
+	
+	<p align="justify">Also, the application will allow users to post comments or provide feedback regarding the items that they tried there. This information may be used by the customers to know which food is popular and the vendors can view use the same information to gauge their strong areas where they could do better. </p>
+	<hr>
+<br/>
+
+
+<i><b>(1.b) What do you want people to say about your service after a visit?</b></i>
+<br/>
+	<p align="justify">We would like the users of this application to say that they found it useful to know which food items were present that day and that they would use the application to provide honest comments so that other people can benefit from the application as well. </p>
+	<hr>
+<br/>
+
+<i><b>(1.c) What are the relevant distinct user classes?</b></i>
+	<br/>
+	<p align="justify">Currently, we are planning  to have two distinct user classes. They are:<br/>
+	
+	1. AIT Community <br/>
+	2. Vendors<br/>
+<hr>
+<br/>
+
+	<i><b>(1.d) What should a user on a smartphone be able to do?</b></i>
+	<br/>
+	<p align="justify">For now, there is not a separate usage plan for the smartphone users but the users will be able to use the 		application just like any other web application via their web browsers in their phones. <br/>
+<hr>
+<br/>
+
+
+	<i><b>(2) Build two or three profiles for users of your application. A profile page contains the following
+information: <br/>
+	<li>(a) A picture of the user</li> 
+	<li>(b) The user’s name, age, occupation, marital status housing situation, and income</li>
+	<li>(c) The user’s short-term and long-term goals relevant to the online community that you’re building, (d) the immediate questions 			that this user will bring to the site</li> 
+	<li>(e) The kind of computer equipment and connection in this person’s house</li>
+	<li> (f) Any other information that will help to humanize this fictitious person</li>
+	</b></i>
+	<br/>
+	<p align="justify"> <b>Solution: </b><%= link_to 'Users', :controller => "basics", :action => "users" %>
+      
+<hr>
+<br/>
+
+<i><b>(3)  For each class of user identified in Exercise 1a, produce a textual or graphical usage scenario for
+how that user will experience your service.</b></i>
+	<br/>
+	<p align="justify"><b>Answer: </b><br>
+        <ul>
+            <li>AIT Community</li>
+            <ul>
+                <li>Users can view the food menu along with their prices as soon as they visit the URL</li>
+                <li>Users who are not signed in cannot view/post comments, ratings, feedbacks or receive any emails which may be sent from the application</li>
+                <li>In order to sign in, users would be required to log in using AIT ID number and a valid AIT email address </li>
+                <li>Users can add comments regarding the food items in the database</li>
+                <li>Users can also add ratings for the particular food item that was cooked that day</li>
+                <li>Users may edit or delete the comments that they had created but not those of others</li>
+                <li>Users can report for inappropriate or indecent comments</li>
+                <li>Users will receive an email for the daily special menu each day if the s/he has subscribed </li>
+                
+            </ul>
+            <li>Vendor</li>
+            <ul>
+                <li>Vendors can add, edit or delete any food item from the menu list</li>
+                <li>Vendors can read the feedbacks from the users</li>
+                <li>Vendors may conduct a poll among a list of items to see which item the customers like the most</li>
+                <li>Vendors can add which items are available on that particular day</li>
+            </ul>
+            
+        </ul><br/>
+<hr>
+<br/>
+
+<i><b>(4) Evaluate offine alternatives. You ought to have a good reason for building an information system.
+You need a convincing answer for why we need this system rather than a book, a pencil, and paper.
+Explain the available alternatives and explain the best features of these alternatives. Justify why
+your system is necessary.</b></i>
+	<br/>
+	<p align="justify"><b>Solution : </b><br/>
+	The possible offline alternatives could be to come personally to the SU Snacks Bar to check the available food items and their price. Also, another way could be to contact the vendor via telephone to get this information. Regular users may have the knowledge of what the regular food items are. However, they would have to contact the vendor to know which items are available for the day.<br/>
+	</p>
+    
+<hr>
+<br/>
+
+<i><b>(5) Evaluate online alternatives. Find the best existing online communities in your subject area.
+Note how closely they conform to the six elements of sustainability (magnet content, collabora-
+tion, searching and browsing capabilities, delegated moderation, means of removing bozos, and
+means for extending the community. Also write down anything strikingly good or bad about the
+registration process and the mechanisms of collaboration, e.g., in discussion forums, comments on
+articles, and chat rooms. Look for voice and mobile interfaces. If present, try them out. Look for
+evidence of personalization and direct controls over preferences.</b></i>
+	<br/>
+	<p align="justify"><b>Solution : </b><br/>
+	Currently, there isn't an existing online alternative to the web application that we are building. <br/>
+	</p>
+    
+<hr>
+<br/>
+
+<i><b>(6) Identify where the magnet content for your system is going to come from.</b></i>
+	<br/>
+	<p align="justify"><b>Solution : </b><br/>
+	The magnet content of our application will mostly come from the fact that this application will be the only online portal for users to view food menu and price. The users will get a chance to post their comments and feedback through which they can post their suggestions or grievances.
+	<br/>
+	The user community will become more participative through online discussions and the options to have their view expressed and giving them a chance to express their opinions to the vendors directly.
+	<br/>
+	</p>
+<hr>
+<br/>
+
+<i><b>(7) Decide on hostname and figure out DNS registration procedures. Be sure to look into the options for hosting of your web site. Ideally, you should all have a real hostname for your system, pointing to your CSIM server, by the end of the semester. At the end of the semester, you should also be ready to place your site at a more permanent home. Please include a plan for how you will do this. Note that AIT, CSIM, or AIT SU could probably be pursuaded to host some of your groups’ sites. Others would be more appropriately hosted offsite.</b></i>
+	<br/>
+	<p align="justify"><b>Solution : </b><br/>
+	The hostname for our web application will be "AITSnacks" which we will be registering in any of the web hosting services.
+	
+	<br/>
+	</p>
+<hr>
+<br/>
+
+
+<i><b>(8) Describe the intellectual property rights of you as developers, authors as contributors, and so on.</b></i>
+	<br/>
+	<p align="justify"><b>Solution : </b><br/>
+	
+	All the design and development works pertaining to this application will solely be coyrighted to Shyam Bhattarai and Dharma K.C.
+	<br/>
+	However, the application is open source and can be redistribute or edit	it under the terms of GNU published by the Free Software Foundation.
+	</p>
+<hr>
+<br/>
+

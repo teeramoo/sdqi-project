@@ -1,0 +1,45 @@
+class NokogiriController < ApplicationController
+
+  def Index
+  end
+
+  def parse
+
+    require 'open-uri'
+    require 'rubygems'
+    require 'nokogiri'
+    @MainLink= "http://spectrum.ieee.org"
+    html = Nokogiri::HTML(open("http://www.spectrum.ieee.org").read)
+
+    html.search('//p').each do |node|
+      node.remove
+    end
+
+    html.search('//article/a').each do |node|
+      @article_link = node.attributes["href"].value
+      node.attributes["href"].value = @MainLink + @article_link
+    end
+
+    html.search('//figcaption').each do |node|
+    node.remove
+    end
+
+    html.search('//img').each do |node|
+    @img_tag = node.attributes["src"].value
+    if (@img_tag == "/assets/img/x.gif")
+      @img_tag = node.attributes["data-original"].value
+    end
+    node.attributes["src"].value = @MainLink + @img_tag
+
+
+    puts html
+
+    @TitleList = html.xpath("//div/article")
+    @TitleList.each_with_index do |link|
+        
+      end
+    
+    end
+  end
+end
+

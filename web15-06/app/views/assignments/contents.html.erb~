@@ -1,0 +1,6 @@
+<h2> Welcome to the Index Page of Group 6 </h2>
+<h3> Click below to go to the solutions of Problem Sets <h3/>
+<%= link_to 'Problem Set 1', assignments_path %>
+<br/>
+<%= link_to 'Problem Set 2', :controller => "basics", :action => "quotations" %>
+<br/>

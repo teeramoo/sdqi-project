@@ -1,0 +1,5 @@
+<html>
+	<body>
+	<p> <%= link_to('click here for parsing', {:controller => 				'nokogiri', :action => 'parse'})%> </p>
+	</body>
+</html>
